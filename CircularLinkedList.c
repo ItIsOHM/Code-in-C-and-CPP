@@ -9,7 +9,7 @@ typedef struct list {
 
 node* ref = NULL;
 
-node* createNode(int data) {
+void createNode(int data) {
     node* temp = (node*)malloc(sizeof(node));
     node* last = ref;
     temp->data = data;
@@ -71,49 +71,62 @@ void deletion(int del) {
     node* temp = ref;
     node* prev = ref;
     bool toDelete = false;
-    while(temp->data != del) {
-        if(temp->next == ref) {
-            printf("\nGiven element not found.");
-            toDelete = false;
-            break;
-        }
-        toDelete = true;
-        prev = temp;
-        temp = temp->next;
+
+    //deletion if only one node is present
+    if(ref == temp && temp->next == ref) {
+        ref = NULL;
+        free(temp);
     }
-
-    if(toDelete) {
-        //deletion if only one node is present
-        if(ref == temp && temp->next == ref) {
-            ref = NULL;
-            free(temp);
+    else {
+        while(temp->data != del) {
+            if(temp->next == ref) {
+                printf("\nGiven element not found.");
+                toDelete = false;
+                break;
+            }
+            toDelete = true;
+            prev = temp;
+            temp = temp->next;
         }
 
-        if(temp == ref) { //if the node to be deleted is first node.
-            prev = ref;
-            while(prev->next != ref) prev = prev->next;
-            //printf("%d", temp->data);
-            ref = temp->next;
-            prev->next = ref;
-            free(temp);
-        }
-        else if(temp->next == ref) { //if the node to be deleted is last node.
-            prev->next = ref;
-            free(temp);
-        }
-        else { //any middle node.
-            prev->next = temp->next;
-            free(temp);
+        if(toDelete) {
+            // //deletion if only one node is present
+            // if(ref == temp && temp->next == ref) {
+            //     ref = NULL;
+            //     free(temp);
+            // }
+
+            if(temp == ref) { //if the node to be deleted is first node.
+                prev = ref;
+                while(prev->next != ref) prev = prev->next;
+                //printf("%d", temp->data);
+                ref = temp->next;
+                prev->next = ref;
+                free(temp);
+            }
+            else if(temp->next == ref) { //if the node to be deleted is last node.
+                prev->next = ref;
+                free(temp);
+            }
+            else { //any middle node.
+                prev->next = temp->next;
+                free(temp);
+            }
         }
     }
 }
 
 void printList() {
     node* temp = ref;
-    do {
+    if(temp == NULL) {
+        printf("No nodes present.");
+    }
+    else {
+        do {
         printf("%d\t", temp->data);
         temp = temp->next;
     } while((temp != ref));
+    }
     printf("\n");
 }
 
